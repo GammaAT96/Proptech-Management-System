@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model notification {
+  id        String   @id @default(uuid())
+  message   String
+  read      Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+  user      user     @relation(fields: [userId], references: [id], map: "Notification_userId_fkey")
+
+  @@index([userId], map: "Notification_userId_fkey")
+}
+
+model property {
+  id        String   @id @default(uuid())
+  name      String
+  address   String
+  units     Int
+  managerId String
+
+  createdAt DateTime @default(now())
+
+  user   user    @relation(fields: [managerId], references: [id], map: "Property_managerId_fkey")
+  ticket ticket[]
+
+  @@index([managerId], map: "Property_managerId_fkey")
+}
+
+model ticket {
+  id                             String           @id @default(uuid())
+  title                          String
+  description                    String
+  status                         ticket_status
+  priority                       ticket_priority
+  createdAt                      DateTime         @default(now())
+  tenantId                       String
+  technicianId                   String?
+  propertyId                     String
+  property                       property         @relation(fields: [propertyId], references: [id], map: "Ticket_propertyId_fkey")
+  user_ticket_technicianIdTouser user?            @relation("ticket_technicianIdTouser", fields: [technicianId], references: [id], map: "Ticket_technicianId_fkey")
+  user_ticket_tenantIdTouser     user             @relation("ticket_tenantIdTouser", fields: [tenantId], references: [id], map: "Ticket_tenantId_fkey")
+  ticketactivity                 ticketactivity[]
+  ticketimage                    ticketimage[]
+
+  @@index([propertyId], map: "Ticket_propertyId_fkey")
+  @@index([technicianId], map: "Ticket_technicianId_fkey")
+  @@index([tenantId], map: "Ticket_tenantId_fkey")
+}
+
+model ticketactivity {
+  id        String   @id @default(uuid())
+  action    String
+  createdAt DateTime @default(now())
+  ticketId  String
+  userId    String
+  ticket    ticket   @relation(fields: [ticketId], references: [id], map: "TicketActivity_ticketId_fkey")
+  user      user     @relation(fields: [userId], references: [id], map: "TicketActivity_userId_fkey")
+
+  @@index([ticketId], map: "TicketActivity_ticketId_fkey")
+  @@index([userId], map: "TicketActivity_userId_fkey")
+}
+
+model ticketimage {
+  id       String @id @default(uuid())
+  url      String
+  ticketId String
+  ticket   ticket @relation(fields: [ticketId], references: [id], map: "TicketImage_ticketId_fkey")
+
+  @@index([ticketId], map: "TicketImage_ticketId_fkey")
+}
+
+model user {
+  id                               String           @id @default(uuid())
+  name                             String
+  email                            String           @unique(map: "User_email_key")
+  password                         String
+  role                             user_role
+  createdAt                        DateTime         @default(now())
+  notification                     notification[]
+  property                         property[]
+  ticket_ticket_technicianIdTouser ticket[]         @relation("ticket_technicianIdTouser")
+  ticket_ticket_tenantIdTouser     ticket[]         @relation("ticket_tenantIdTouser")
+  ticketactivity                   ticketactivity[]
+}
+
+enum ticket_status {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  DONE
+}
+
+enum ticket_priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum user_role {
+  TENANT
+  MANAGER
+  TECHNICIAN
+  ADMIN
+}
