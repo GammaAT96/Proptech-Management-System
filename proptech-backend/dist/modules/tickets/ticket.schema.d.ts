@@ -32,13 +32,13 @@ export declare const assignTechnicianSchema: z.ZodObject<{
 export type AssignTechnicianInput = z.infer<typeof assignTechnicianSchema>;
 export declare const updateStatusSchema: z.ZodObject<{
     status: z.ZodEnum<["OPEN", "ASSIGNED", "IN_PROGRESS", "DONE"]>;
-    actorId: z.ZodString;
+    actorId: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     status: "OPEN" | "ASSIGNED" | "IN_PROGRESS" | "DONE";
-    actorId: string;
+    actorId?: string | undefined;
 }, {
     status: "OPEN" | "ASSIGNED" | "IN_PROGRESS" | "DONE";
-    actorId: string;
+    actorId?: string | undefined;
 }>;
 export type UpdateStatusInput = z.infer<typeof updateStatusSchema>;
 //# sourceMappingURL=ticket.schema.d.ts.map

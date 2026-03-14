@@ -6,6 +6,7 @@ import {
   getPropertyById,
 } from "./property.service.js";
 import { createPropertySchema } from "./property.schema.js";
+import { getClaimsFromToken, parseAuthHeader } from "../auth/auth.service.js";
 
 export const createPropertyHandler = async (req: Request, res: Response) => {
   const parsed = createPropertySchema.safeParse(req.body);
@@ -20,8 +21,21 @@ export const createPropertyHandler = async (req: Request, res: Response) => {
   res.status(201).json(property);
 };
 
-export const listPropertiesHandler = async (_req: Request, res: Response) => {
-  const properties = await getProperties();
+export const listPropertiesHandler = async (req: Request, res: Response) => {
+  const token = parseAuthHeader(req.header("authorization"));
+  let managerId: string | undefined;
+  if (token) {
+    try {
+      const claims = getClaimsFromToken(token) as { userId: string; role: string };
+      if (claims.role === "MANAGER") {
+        managerId = claims.userId;
+      }
+    } catch {
+      // ignore invalid token for now; fall back to global list for non-manager roles
+    }
+  }
+
+  const properties = await getProperties(managerId);
   res.json(properties);
 };
 

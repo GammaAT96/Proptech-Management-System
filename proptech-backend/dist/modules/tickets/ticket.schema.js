@@ -12,6 +12,6 @@ export const assignTechnicianSchema = z.object({
 });
 export const updateStatusSchema = z.object({
     status: z.enum(["OPEN", "ASSIGNED", "IN_PROGRESS", "DONE"]),
-    actorId: z.string().min(1, "actorId is required"),
+    actorId: z.string().min(1).optional(),
 });
 //# sourceMappingURL=ticket.schema.js.map

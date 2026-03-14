@@ -5,6 +5,7 @@ import {
   createTicketHandler,
   getTicketHandler,
   listTicketsHandler,
+  listMyTicketsHandler,
   updateTicketStatusHandler,
   uploadTicketImageHandler,
 } from "./ticket.controller.js";
@@ -60,7 +61,12 @@ ticketRouter.post("/", createTicketHandler);
  * @swagger
  * /tickets:
  *   get:
- *     summary: List tickets with pagination
+ *     summary: List tickets with pagination (role-aware)
+ *     description: |
+ *       **Role-aware endpoint.** Response set depends on the authenticated user's role:
+ *       - **MANAGER** – Returns only tickets for properties where `property.managerId` equals the current user's id. Managers cannot see tickets of another manager's properties.
+ *       - **ADMIN** (or other authenticated roles) – Returns all tickets (paginated).
+ *       Technicians and tenants should use **GET /tickets/my** for their assigned or own tickets.
  *     tags: [Tickets]
  *     parameters:
  *       - in: query
@@ -78,9 +84,27 @@ ticketRouter.post("/", createTicketHandler);
  *         required: false
  *     responses:
  *       200:
- *         description: Paginated list of tickets
+ *         description: Paginated list of tickets (scoped by role)
+ *       401:
+ *         description: Unauthorized
  */
 ticketRouter.get("/", listTicketsHandler);
+
+/**
+ * @swagger
+ * /tickets/my:
+ *   get:
+ *     summary: List tickets assigned to the current technician
+ *     tags: [Tickets]
+ *     responses:
+ *       200:
+ *         description: List of tickets assigned to the logged-in technician
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (not a technician)
+ */
+ticketRouter.get("/my", listMyTicketsHandler);
 
 /**
  * @swagger

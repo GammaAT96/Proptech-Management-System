@@ -20,8 +20,9 @@ export const createProperty = async (input: CreatePropertyInput) => {
   });
 };
 
-export const getProperties = async () => {
+export const getProperties = async (managerId?: string) => {
   return prisma.property.findMany({
+    ...(managerId ? { where: { managerId } } : {}),
     select: {
       id: true,
       name: true,

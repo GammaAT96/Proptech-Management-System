@@ -18,6 +18,13 @@ const ticketSelect = {
   createdAt: true,
 } as const;
 
+const ticketWithImagesSelect = {
+  ...ticketSelect,
+  ticketimage: {
+    select: { id: true, url: true },
+  },
+} as const;
+
 export const createTicket = async (input: CreateTicketInput) => {
   const ticket = await prisma.ticket.create({
     data: {
@@ -79,10 +86,62 @@ export const listTickets = async (page = 1, limit = 20) => {
   };
 };
 
+export const listTicketsForManager = async (
+  managerId: string,
+  page = 1,
+  limit = 20
+) => {
+  const take = Math.min(Math.max(limit, 1), 100);
+  const skip = (Math.max(page, 1) - 1) * take;
+
+  const where = {
+    property: {
+      managerId,
+    },
+  } as const;
+
+  const [items, total] = await Promise.all([
+    prisma.ticket.findMany({
+      where,
+      select: ticketSelect,
+      orderBy: { createdAt: "desc" },
+      skip,
+      take,
+    }),
+    prisma.ticket.count({ where }),
+  ]);
+
+  return {
+    items,
+    page: Math.max(page, 1),
+    limit: take,
+    total,
+    totalPages: Math.ceil(total / take),
+  };
+};
+
+export const listTicketsForTechnician = async (technicianId: string) => {
+  const items = await prisma.ticket.findMany({
+    where: { technicianId },
+    select: ticketSelect,
+    orderBy: { createdAt: "desc" },
+  });
+  return items;
+};
+
+export const listTicketsForTenant = async (tenantId: string) => {
+  const items = await prisma.ticket.findMany({
+    where: { tenantId },
+    select: ticketSelect,
+    orderBy: { createdAt: "desc" },
+  });
+  return items;
+};
+
 export const getTicketById = async (id: string) => {
   return prisma.ticket.findUnique({
     where: { id },
-    select: ticketSelect,
+    select: ticketWithImagesSelect,
   });
 };
 
@@ -123,7 +182,7 @@ export const assignTechnician = async (
 
 export const updateTicketStatus = async (
   ticketId: string,
-  input: UpdateStatusInput
+  input: UpdateStatusInput & { actorId: string }
 ) => {
   try {
     const ticket = await prisma.ticket.update({

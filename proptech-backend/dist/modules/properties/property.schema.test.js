@@ -5,6 +5,7 @@ test("createPropertySchema validates required fields", () => {
     const result = createPropertySchema.safeParse({
         name: "Building A",
         address: "123 Main St",
+        units: 20,
         managerId: "manager-1",
     });
     assert.equal(result.success, true);

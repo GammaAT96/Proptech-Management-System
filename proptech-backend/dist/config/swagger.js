@@ -21,7 +21,7 @@ export const swaggerSpec = swaggerJsdoc({
                 },
             },
         },
-        // 🔴 ADD THIS PART
+        //  ADD THIS PART
         security: [
             {
                 bearerAuth: [],

@@ -19,7 +19,7 @@ export type AssignTechnicianInput = z.infer<typeof assignTechnicianSchema>;
 
 export const updateStatusSchema = z.object({
   status: z.enum(["OPEN", "ASSIGNED", "IN_PROGRESS", "DONE"]),
-  actorId: z.string().min(1, "actorId is required"),
+  actorId: z.string().min(1).optional(),
 });
 
 export type UpdateStatusInput = z.infer<typeof updateStatusSchema>;

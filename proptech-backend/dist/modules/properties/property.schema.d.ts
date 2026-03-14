@@ -7,13 +7,13 @@ export declare const createPropertySchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     name: string;
     address: string;
-    units: number;
     managerId: string;
+    units: number;
 }, {
     name: string;
     address: string;
-    units: number;
     managerId: string;
+    units: number;
 }>;
 export type CreatePropertyInput = z.infer<typeof createPropertySchema>;
 //# sourceMappingURL=property.schema.d.ts.map

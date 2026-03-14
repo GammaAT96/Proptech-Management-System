@@ -21,13 +21,11 @@ model property {
   id        String   @id @default(uuid())
   name      String
   address   String
-  units     Int
   managerId String
-
   createdAt DateTime @default(now())
-
-  user   user    @relation(fields: [managerId], references: [id], map: "Property_managerId_fkey")
-  ticket ticket[]
+  units     Int
+  user      user     @relation(fields: [managerId], references: [id], map: "Property_managerId_fkey")
+  ticket    ticket[]
 
   @@index([managerId], map: "Property_managerId_fkey")
 }
