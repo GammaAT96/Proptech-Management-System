@@ -75,9 +75,10 @@ export const DialogTrigger: React.FC<DialogTriggerProps> = ({ asChild, children 
   const { onOpenChange } = useContext(DialogContext);
   const openDialog = () => onOpenChange?.(true);
   if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<{ onClick?: () => void }>, {
+    const child = children as React.ReactElement<{ onClick?: (e: React.MouseEvent) => void }>;
+    return React.cloneElement(child, {
       onClick: (e: React.MouseEvent) => {
-        (children as React.ReactElement<{ onClick?: (e: React.MouseEvent) => void }>).props?.onClick?.(e);
+        child.props?.onClick?.(e);
         openDialog();
       },
     });

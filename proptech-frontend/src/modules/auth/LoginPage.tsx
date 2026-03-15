@@ -91,7 +91,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email" className="font-medium text-gray-700">
-                Username
+                Email
               </Label>
               <Input
                 id="email"

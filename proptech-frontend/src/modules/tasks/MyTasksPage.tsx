@@ -120,7 +120,7 @@ export const MyTasksPage: React.FC = () => {
                           <Badge variant={priorityVariant(ticket.priority)}>{ticket.priority}</Badge>
                         </TableCell>
                         <TableCell>{ticket.status}</TableCell>
-                        <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                        <TableCell className="text-right" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                           {actionLabel && (
                             <Button
                               size="sm"

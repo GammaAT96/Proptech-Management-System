@@ -17,7 +17,7 @@ function mapTicketWithImages(t: BackendTicketWithImages): MaintenanceTicket {
 }
 
 function toMaintenanceTicket(t: Record<string, unknown>): MaintenanceTicket {
-  const out = { ...t } as MaintenanceTicket & { technicianId?: string };
+  const out = { ...t } as unknown as MaintenanceTicket & { technicianId?: string };
   out.assignedTechnicianId = out.technicianId ?? out.assignedTechnicianId;
   return out;
 }

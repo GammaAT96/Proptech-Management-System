@@ -1,12 +1,15 @@
 import React from 'react';
 
-export const Label = ({
-  children,
-  className = '',
-}: {
+type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
   children: React.ReactNode;
   className?: string;
-}) => {
-  return <label className={`text-sm font-medium ${className}`}>{children}</label>;
+};
+
+export const Label = ({ children, className = '', ...props }: LabelProps) => {
+  return (
+    <label className={`text-sm font-medium ${className}`} {...props}>
+      {children}
+    </label>
+  );
 };
 
