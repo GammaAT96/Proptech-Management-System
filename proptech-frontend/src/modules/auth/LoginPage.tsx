@@ -11,8 +11,8 @@ interface LoginPageProps {
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('sarah@example.com');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -129,13 +129,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             >
               {loading ? 'Signing in...' : 'Login'}
             </Button>
-            <div className="space-y-1 border-t pt-4 text-center text-xs text-gray-500">
-              <p className="font-medium text-gray-600">Demo accounts:</p>
-              <p>Manager: sarah@example.com</p>
-              <p>Tenant: john@example.com</p>
-              <p>Technician: mike@example.com</p>
-              <p className="mt-2 text-gray-400">Password: password</p>
-            </div>
           </form>
         </div>
       </div>
