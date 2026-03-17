@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { prisma } from "../../config/prisma.js";
 import { createNotification } from "../notifications/notification.service.js";
 const ticketSelect = {
@@ -32,6 +33,7 @@ export const createTicket = async (input) => {
     });
     await prisma.ticketactivity.create({
         data: {
+            id: randomUUID(),
             ticketId: ticket.id,
             userId: input.tenantId,
             action: "Ticket created",
@@ -130,6 +132,7 @@ export const assignTechnician = async (ticketId, input) => {
         });
         await prisma.ticketactivity.create({
             data: {
+                id: randomUUID(),
                 ticketId,
                 userId: input.technicianId,
                 action: "Technician assigned",
@@ -156,6 +159,7 @@ export const updateTicketStatus = async (ticketId, input) => {
         });
         await prisma.ticketactivity.create({
             data: {
+                id: randomUUID(),
                 ticketId,
                 userId: input.actorId,
                 action: `Status changed to ${input.status}`,
