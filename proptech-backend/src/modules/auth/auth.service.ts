@@ -53,7 +53,16 @@ export async function loginUser(input: LoginInput) {
     return { error: "INVALID_CREDENTIALS" as const } as const;
   }
 
-  const ok = await bcrypt.compare(input.password, user.password);
+  if (!user.password) {
+    return { error: "INVALID_CREDENTIALS" as const } as const;
+  }
+  let ok = false;
+  try {
+    ok = await bcrypt.compare(input.password, user.password);
+  } catch {
+    // Treat invalid/legacy password formats as invalid credentials instead of 500.
+    return { error: "INVALID_CREDENTIALS" as const } as const;
+  }
   if (!ok) {
     return { error: "INVALID_CREDENTIALS" as const } as const;
   }

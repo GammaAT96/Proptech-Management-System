@@ -39,6 +39,15 @@ app.use("/notifications", notificationRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(err);
+  const message =
+    err instanceof Error && process.env.NODE_ENV !== "production"
+      ? err.message
+      : "Internal Server Error";
+  return res.status(500).json({ error: "INTERNAL_SERVER_ERROR", message });
+});
+
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 
 app.listen(PORT, () => {
